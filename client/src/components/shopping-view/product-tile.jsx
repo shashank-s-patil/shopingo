@@ -74,15 +74,15 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddtoCart
             {product?.salePrice > 0 ? (
               <>
                 <span className="text-base font-medium" style={{ fontFamily: "'Jost', sans-serif", color: "var(--gold)" }}>
-                  ${product.salePrice}
+                  ₹{product.salePrice}
                 </span>
                 <span className="text-xs line-through" style={{ color: "var(--mist)", fontFamily: "'Jost', sans-serif" }}>
-                  ${product.price}
+                  ₹{product.price}
                 </span>
               </>
             ) : (
               <span className="text-base font-medium" style={{ fontFamily: "'Jost', sans-serif", color: "var(--cream)" }}>
-                ${product?.price}
+                ₹{product?.price}
               </span>
             )}
           </div>

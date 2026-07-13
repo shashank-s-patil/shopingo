@@ -64,7 +64,19 @@ export const updateCartQuantity = createAsyncThunk(
 const shoppingCartSlice = createSlice({
   name: "shoppingCart",
   initialState,
-  reducers: {},
+  reducers: {
+    updateItemQuantityLocally: (state, action) => {
+      const { productId, quantity } = action.payload;
+      if (state.cartItems?.items) {
+        const index = state.cartItems.items.findIndex(
+          (item) => item.productId === productId
+        );
+        if (index > -1) {
+          state.cartItems.items[index].quantity = quantity;
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addToCart.pending, (state) => {
@@ -92,13 +104,11 @@ const shoppingCartSlice = createSlice({
       .addCase(updateCartQuantity.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateCartQuantity.fulfilled, (state, action) => {
+      .addCase(updateCartQuantity.fulfilled, (state) => {
         state.isLoading = false;
-        state.cartItems = action.payload.data;
       })
       .addCase(updateCartQuantity.rejected, (state) => {
         state.isLoading = false;
-        state.cartItems = [];
       })
       .addCase(deleteCartItem.pending, (state) => {
         state.isLoading = true;
@@ -113,5 +123,7 @@ const shoppingCartSlice = createSlice({
       });
   },
 });
+
+export const { updateItemQuantityLocally } = shoppingCartSlice.actions;
 
 export default shoppingCartSlice.reducer;

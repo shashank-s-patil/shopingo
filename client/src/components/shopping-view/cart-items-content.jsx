@@ -1,6 +1,6 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
+import { deleteCartItem, updateCartQuantity, updateItemQuantityLocally } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
 
 function UserCartItemsContent({ cartItem }) {
@@ -11,6 +11,8 @@ function UserCartItemsContent({ cartItem }) {
   const { toast } = useToast();
 
   function handleUpdateQuantity(getCartItem, typeOfAction) {
+    const newQuantity = typeOfAction === "plus" ? getCartItem?.quantity + 1 : getCartItem?.quantity - 1;
+
     if (typeOfAction === "plus") {
       let getCartItems = cartItems.items || [];
       if (getCartItems.length) {
@@ -26,13 +28,13 @@ function UserCartItemsContent({ cartItem }) {
         }
       }
     }
+
+    dispatch(updateItemQuantityLocally({ productId: getCartItem?.productId, quantity: newQuantity }));
     dispatch(updateCartQuantity({
       userId: user?.id,
       productId: getCartItem?.productId,
-      quantity: typeOfAction === "plus" ? getCartItem?.quantity + 1 : getCartItem?.quantity - 1,
-    })).then((data) => {
-      if (data?.payload?.success) toast({ title: "Cart updated" });
-    });
+      quantity: newQuantity,
+    }));
   }
 
   function handleCartItemDelete(getCartItem) {
@@ -82,7 +84,7 @@ function UserCartItemsContent({ cartItem }) {
 
       <div className="flex flex-col items-end gap-2">
         <span className="text-sm font-medium" style={{ fontFamily: "'Jost', sans-serif", color: "var(--cream)" }}>
-          ${((cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) * cartItem?.quantity).toFixed(2)}
+          ₹{((cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) * cartItem?.quantity).toFixed(2)}
         </span>
         <button
           onClick={() => handleCartItemDelete(cartItem)}

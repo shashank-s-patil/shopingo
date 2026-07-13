@@ -11,7 +11,7 @@ import { CreditCard } from "lucide-react";
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const { razorpayOrderId, amount, currency, keyId, orderId, isLoading } =
+  const { isLoading } =
     useSelector((state) => state.shopOrder);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [isPaymentStart, setIsPaymemntStart] = useState(false);
@@ -97,10 +97,11 @@ function ShoppingCheckout() {
       setIsPaymemntStart(false);
       return;
     }
-    openRazorpayModal();
+    openRazorpayModal(data.payload);
   }
 
-  function openRazorpayModal() {
+  function openRazorpayModal(payload) {
+    const { keyId, amount, currency, razorpayOrderId, orderId } = payload;
     const scriptLoaded = loadRazorpayScript();
     scriptLoaded.then((loaded) => {
       if (!loaded) {

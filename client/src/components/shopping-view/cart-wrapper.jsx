@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 import { ShoppingBag } from "lucide-react";
+import { useSelector } from "react-redux";
 
 function UserCartWrapper({ cartItems, setOpenCartSheet }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const totalCartAmount = cartItems && cartItems.length > 0
     ? cartItems.reduce((sum, currentItem) =>
@@ -56,15 +58,15 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
               Total
             </span>
             <span className="text-lg font-medium" style={{ fontFamily: "'Cormorant Garamond', serif", color: "var(--cream)" }}>
-              ${totalCartAmount.toFixed(2)}
+              ₹{totalCartAmount.toFixed(2)}
             </span>
           </div>
           <button
-            onClick={() => { navigate("/shop/checkout"); setOpenCartSheet(false); }}
+            onClick={() => { navigate(isAuthenticated ? "/shop/checkout" : "/auth/login"); setOpenCartSheet(false); }}
             className="btn-gold w-full py-3.5"
             style={{ borderRadius: "2px" }}
           >
-            Proceed to Checkout
+            {isAuthenticated ? "Proceed to Checkout" : "Sign in to Checkout"}
           </button>
         </div>
       )}

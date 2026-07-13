@@ -1,6 +1,7 @@
 import { StarIcon, X } from "lucide-react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
 import { setProductDetails } from "@/store/shop/products-slice";
@@ -12,7 +13,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
   const { toast } = useToast();
@@ -20,6 +22,10 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   function handleRatingChange(getRating) { setRating(getRating); }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
+    if (!isAuthenticated) {
+      navigate("/auth/login");
+      return;
+    }
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === getCurrentProductId);
@@ -126,15 +132,15 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 {productDetails?.salePrice > 0 ? (
                   <>
                     <span className="text-2xl font-medium" style={{ fontFamily: "'Jost', sans-serif", color: "var(--gold)" }}>
-                      ${productDetails.salePrice}
+                      ₹{productDetails.salePrice}
                     </span>
                     <span className="text-base line-through" style={{ color: "var(--mist)", fontFamily: "'Jost', sans-serif" }}>
-                      ${productDetails.price}
+                      ₹{productDetails.price}
                     </span>
                   </>
                 ) : (
                   <span className="text-2xl font-medium" style={{ fontFamily: "'Jost', sans-serif", color: "var(--cream)" }}>
-                    ${productDetails?.price}
+                    ₹{productDetails?.price}
                   </span>
                 )}
               </div>

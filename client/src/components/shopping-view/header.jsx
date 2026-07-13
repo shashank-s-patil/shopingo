@@ -60,7 +60,7 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -71,8 +71,8 @@ function HeaderRightContent() {
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id));
-  }, [dispatch]);
+    if (user?.id) dispatch(fetchCartItems(user?.id));
+  }, [dispatch, user]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-5">
@@ -99,38 +99,57 @@ function HeaderRightContent() {
         />
       </Sheet>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="w-9 h-9 flex items-center justify-center border border-[rgba(201,169,110,0.2)] rounded-none text-[var(--obsidian)] hover:border-[var(--gold)] transition-all duration-300 gold-gradient">
-            <span className="text-xs font-bold uppercase" style={{ fontFamily: "'Jost', sans-serif" }}>
-              {user?.userName[0].toUpperCase()}
-            </span>
+      {isAuthenticated ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-9 h-9 flex items-center justify-center border border-[rgba(201,169,110,0.2)] rounded-none text-[var(--obsidian)] hover:border-[var(--gold)] transition-all duration-300 gold-gradient">
+              <span className="text-xs font-bold uppercase" style={{ fontFamily: "'Jost', sans-serif" }}>
+                {user?.userName[0].toUpperCase()}
+              </span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" className="w-52 bg-[var(--charcoal)] border border-[rgba(201,169,110,0.2)] rounded-none p-1">
+            <DropdownMenuLabel className="text-[var(--mist)] text-xs tracking-widest uppercase pb-2" style={{ fontFamily: "'Jost', sans-serif" }}>
+              {user?.userName}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-[rgba(201,169,110,0.15)]" />
+            <DropdownMenuItem
+              onClick={() => navigate("/shop/account")}
+              className="text-[var(--cream)] hover:text-[var(--gold)] hover:bg-[rgba(201,169,110,0.08)] cursor-pointer text-xs tracking-wider uppercase rounded-none"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              <UserCog className="mr-2 h-3.5 w-3.5" />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-[rgba(201,169,110,0.15)]" />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-[var(--cream)] hover:text-[var(--gold)] hover:bg-[rgba(201,169,110,0.08)] cursor-pointer text-xs tracking-wider uppercase rounded-none"
+              style={{ fontFamily: "'Jost', sans-serif" }}
+            >
+              <LogOut className="mr-2 h-3.5 w-3.5" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/auth/login")}
+            className="btn-gold px-5 py-2 text-[0.65rem]"
+            style={{ borderRadius: "2px" }}
+          >
+            Sign In
           </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" className="w-52 bg-[var(--charcoal)] border border-[rgba(201,169,110,0.2)] rounded-none p-1">
-          <DropdownMenuLabel className="text-[var(--mist)] text-xs tracking-widest uppercase pb-2" style={{ fontFamily: "'Jost', sans-serif" }}>
-            {user?.userName}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator className="bg-[rgba(201,169,110,0.15)]" />
-          <DropdownMenuItem
-            onClick={() => navigate("/shop/account")}
-            className="text-[var(--cream)] hover:text-[var(--gold)] hover:bg-[rgba(201,169,110,0.08)] cursor-pointer text-xs tracking-wider uppercase rounded-none"
-            style={{ fontFamily: "'Jost', sans-serif" }}
+          <button
+            onClick={() => navigate("/auth/register")}
+            className="btn-outline-gold px-5 py-2 text-[0.65rem]"
+            style={{ borderRadius: "2px" }}
           >
-            <UserCog className="mr-2 h-3.5 w-3.5" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator className="bg-[rgba(201,169,110,0.15)]" />
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-[var(--cream)] hover:text-[var(--gold)] hover:bg-[rgba(201,169,110,0.08)] cursor-pointer text-xs tracking-wider uppercase rounded-none"
-            style={{ fontFamily: "'Jost', sans-serif" }}
-          >
-            <LogOut className="mr-2 h-3.5 w-3.5" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            Register
+          </button>
+        </div>
+      )}
     </div>
   );
 }

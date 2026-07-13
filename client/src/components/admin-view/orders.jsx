@@ -60,7 +60,7 @@ function AdminOrdersView() {
                     </span>
                   </td>
                   <td style={{ padding: "14px 16px", color: "var(--cream)", fontFamily: "'Jost', sans-serif", fontWeight: 500 }}>
-                    ${orderItem?.totalAmount}
+                    ₹{orderItem?.totalAmount}
                   </td>
                   <td style={{ padding: "14px 16px" }}>
                     <Dialog
