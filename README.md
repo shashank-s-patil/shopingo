@@ -118,7 +118,7 @@ User clicks "Pay with Razorpay"
 
 ---
 
-## What This Proves to Interviewers
+## Key Things
 
 - **End-to-end e-commerce architecture** — auth, state, payments, deployment
 - **Production-grade security** — JWT cookies, HMAC payment verification, environment isolation
