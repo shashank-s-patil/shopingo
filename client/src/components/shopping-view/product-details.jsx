@@ -84,12 +84,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent
-        className="p-0 overflow-hidden max-w-[92vw] sm:max-w-[85vw] lg:max-w-[72vw]"
+        className="p-0 overflow-y-auto md:overflow-hidden max-w-[92vw] sm:max-w-[85vw] lg:max-w-[72vw] max-h-[90vh] my-4"
         style={{ background: "var(--charcoal)", border: "1px solid rgba(201,169,110,0.2)", borderRadius: "0" }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Product image */}
-          <div className="relative overflow-hidden" style={{ aspectRatio: "1/1", background: "var(--smoke)" }}>
+          <div className="relative overflow-hidden md:self-start" style={{ aspectRatio: "1/1", background: "var(--smoke)" }}>
             <img
               src={productDetails?.image}
               alt={productDetails?.title}
@@ -106,7 +106,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           </div>
 
           {/* Product info */}
-          <div className="flex flex-col p-8 overflow-y-auto" style={{ maxHeight: "85vh" }}>
+          <div className="flex flex-col p-8 md:overflow-y-auto md:max-h-[85vh]">
             <div className="flex-1">
               {/* Title */}
               <p className="section-eyebrow mb-2">{productDetails?.category} · {productDetails?.brand}</p>
